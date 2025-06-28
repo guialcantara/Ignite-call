@@ -4,6 +4,7 @@ import { NextSeo } from 'next-seo'
 import { prisma } from '../../../lib/prisma'
 import { ScheduleForm } from './ScheduleForm'
 import { Container, UserHeader } from './styles'
+import { LoginButton } from './LoginButton'
 
 interface ScheculeProps {
   user: {
@@ -23,6 +24,7 @@ export default function Schedule({ user }: ScheculeProps) {
           <Avatar src={user.avatarUrl} />
           <Heading>{user.name}</Heading>
           <Text>{user.bio}</Text>
+          <LoginButton/>
         </UserHeader>
         <ScheduleForm />
       </Container>
@@ -55,6 +57,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       user: { name: user.name, bio: user.bio, avatarUrl: user.avatar_url },
     },
-    revalidate: 60 * 60 * 24, // 1 day
+    revalidate: 5, // 1 day
   }
 }

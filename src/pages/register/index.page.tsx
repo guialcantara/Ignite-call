@@ -50,7 +50,6 @@ export default function Register() {
         alert(err.response.data.message)
         return
       }
-      console.log(err)
     }
   }
   return (

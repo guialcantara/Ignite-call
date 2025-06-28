@@ -24,7 +24,7 @@ export default function Schedule({ user }: ScheculeProps) {
           <Avatar src={user.avatarUrl} />
           <Heading>{user.name}</Heading>
           <Text>{user.bio}</Text>
-          <LoginButton/>
+          <LoginButton />
         </UserHeader>
         <ScheduleForm />
       </Container>

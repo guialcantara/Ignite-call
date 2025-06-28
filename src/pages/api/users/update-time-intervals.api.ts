@@ -1,37 +1,37 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth";
-import { z } from "zod";
-import { prisma } from "../../../lib/prisma";
-import { buildNextAuthOptions } from "../auth/[...nextauth].api";
+import { NextApiRequest, NextApiResponse } from 'next'
+import { getServerSession } from 'next-auth'
+import { z } from 'zod'
+import { prisma } from '../../../lib/prisma'
+import { buildNextAuthOptions } from '../auth/[...nextauth].api'
 const timeIntervalsBodySchema = z.object({
   intervals: z.array(
     z.object({
       weekDay: z.number(),
       startTimeInMinutes: z.number(),
       endTimeInMinutes: z.number(),
-    })
+    }),
   ),
-});
+})
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
-  if (req.method !== "POST") {
-    return res.status(405).end();
+  if (req.method !== 'POST') {
+    return res.status(405).end()
   }
 
   const session = await getServerSession(
     req,
     res,
-    buildNextAuthOptions(req, res)
-  );
+    buildNextAuthOptions(req, res),
+  )
 
   if (!session) {
-    return res.status(401).end();
+    return res.status(401).end()
   }
 
-  const { intervals } = timeIntervalsBodySchema.parse(req.body);
-  const userId = session.user.id;
+  const { intervals } = timeIntervalsBodySchema.parse(req.body)
+  const userId = session.user.id
 
   await prisma.$transaction([
     prisma.userTimeInterval.deleteMany({
@@ -45,12 +45,12 @@ export default async function handler(
         user_id: userId,
       })),
     }),
-  ]);
+  ])
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { username: true },
-  });
+  })
 
-  return res.status(201).json({ username: user?.username });
+  return res.status(201).json({ username: user?.username })
 }
